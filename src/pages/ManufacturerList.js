@@ -25,8 +25,8 @@ export default function ManufacturerList() {
 
     return (
         <div>
-            <table>
-                <thead>
+            <table class="table table-bordered table-hover">
+                <thead class="thead">
                     <tr>
                         <th>Id</th>
                         <th>Nimi</th>

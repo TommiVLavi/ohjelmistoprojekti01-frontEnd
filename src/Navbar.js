@@ -1,6 +1,6 @@
 import { Children } from "react"
 import { Link, useMatch, useResolvedPath } from "react-router-dom"
-//navipalkin koodit
+
 export default function Navbar() {
     
     
