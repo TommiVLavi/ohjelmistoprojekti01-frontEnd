@@ -2,21 +2,21 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function ProductList() {
-    const [manufacturerData, setManufacturerData] = useState([]);
+    const [productData, setProductData] = useState([]);
     const [message, setMessage] = useState('Ladataan tietoja...');
 
     // get data from api and set data to state
-    const getManufacturerData = async () => {
+    const getProductData = async () => {
         try {
             const response = await axios.get('https://spring.omppujarane.store/api/products');
-            setManufacturerData(response.data);
+            setProductData(response.data);
             setMessage('');
         } catch (error) {
-            setMessage('Tietojen haku ei onnistunut');
+            setMessage('Tuotteiden haku ei onnistunut');
         }
     };
     useEffect(() => {
-        getManufacturerData();
+        getProductData();
     }, []);
 
     // return table when data is loaded and there are no errors
@@ -34,7 +34,7 @@ export default function ProductList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {manufacturerData.map((item) => (
+                    {productData.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
