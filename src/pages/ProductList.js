@@ -92,8 +92,8 @@ export default function ProductList() {
 
     return (
         <div>
-            <table class="table table-bordered table-striped table-hover">
-                <thead class="thead thead-dark">
+            <table className="table table-bordered table-striped table-hover">
+                <thead className="thead thead-dark">
                     <tr>
                         <th>Id</th>
                         <th>Nimi</th>
