@@ -91,7 +91,7 @@ export default function ProductList() {
     }
 
     return (
-        <div>
+        <div className='table-container'>
             <table className="table table-bordered table-striped table-hover">
                 <thead className="thead thead-dark">
                     <tr>
