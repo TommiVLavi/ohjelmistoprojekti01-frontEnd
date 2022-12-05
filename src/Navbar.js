@@ -1,5 +1,6 @@
 import { Children } from "react"
 import { Link, useMatch, useResolvedPath } from "react-router-dom"
+import LoginForm from './components/LoginForm';
 
 export default function Navbar() {
     
@@ -10,6 +11,7 @@ export default function Navbar() {
             <ul>
                 <CustomLink to="/ProductList">Tuotelistaus</CustomLink>
                 <CustomLink to="/ManufacturerList">Valmistajalistaus</CustomLink>
+                <LoginForm />
             </ul>
         </nav>
     )    
