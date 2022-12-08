@@ -28,7 +28,7 @@ export default function ProductList() {
     const deleteProduct = async (id) => {
         console.log("Clicked delete item: " + id);
         try{
-            const response = await axios.delete('https://spring.omppujarane.store/api/products/' + id);
+            const response = await axios.delete('https://spring.omppujarane.store/api/products' + id);
             console.log('Tuote poistettu');
             setMessage('');
         }
@@ -45,7 +45,7 @@ export default function ProductList() {
             "type": "Päähine",
             "price": 13,
             "manufacturer": {
-                "id": 5
+                "id": 1
             }
         }
         const prod2 ={
@@ -53,7 +53,7 @@ export default function ProductList() {
             "type": "talvihaalari",
             "price": 92,
             "manufacturer": {
-            "id": 4
+                "id": 2
             }
         }
         const prod3 ={
@@ -61,27 +61,27 @@ export default function ProductList() {
             "type": "Haalari",
             "price": 56,
             "manufacturer": {
-                "id": 5
+                "id": 3
             }
         }
         
         console.log("lisää tuotteita");
         const response = await axios
-        .post('https://spring.omppujarane.store/api/products/', prod1)
+        .post('https://spring.omppujarane.store/api/products', prod1)
         .catch((error) => console.log('Error: ', error));
         if(response && response.data){
             console.log(response);
             console.log(response.data);
         }
         const response2 = await axios
-        .post('https://spring.omppujarane.store/api/products/', prod2)
+        .post('https://spring.omppujarane.store/api/products', prod2)
         .catch((error) => console.log('Error: ', error));
         if(response2 && response2.data){
             console.log(response2);
             console.log(response2.data);
         }
         const response3 = await axios
-        .post('https://spring.omppujarane.store/api/products/', prod3)
+        .post('https://spring.omppujarane.store/api/products', prod3)
         .catch((error) => console.log('Error: ', error));
         if(response3 && response3.data){
             console.log(response3);

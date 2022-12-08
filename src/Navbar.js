@@ -9,6 +9,7 @@ export default function Navbar() {
         <nav className="nav">
             <Link to="/" className="site-title">Etusivulle</Link>
             <ul>
+                <CustomLink to="/ProductForm">Lisää tuote</CustomLink>
                 <CustomLink to="/ProductList">Tuotelistaus</CustomLink>
                 <CustomLink to="/ManufacturerList">Valmistajalistaus</CustomLink>
                 <LoginForm />
