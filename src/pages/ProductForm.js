@@ -6,8 +6,8 @@ export default function ProductForm() {
     const [productData, setProductData] = useState({
         name: '',
         type: '',
-        price: null,
-        manufacturer: null,
+        price: '',
+        manufacturer: 0,
     });
 
     const getManufacturerData = async () => {
@@ -27,9 +27,16 @@ export default function ProductForm() {
             { ...productData, [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value }
             );
     }
+    const emptyForm = () => {
+        setProductData({
+            name: '',
+            type: '',
+            price: '',
+            manufacturer: 0,
+        })
+    }
 
     const handleSubmit = async () => {
-
         const formData = {
             name: productData.name,
             type: productData.type,
@@ -39,14 +46,13 @@ export default function ProductForm() {
             }
         }
         try {
-            await axios.post('https://spring.omppujarane.store/api/products', formData)
+            await axios.post('https://spring.omppujarane.store/api/products/', formData)
                 .then((response) => {
-                    console.log(response);
                     setProductData({
                         name: '',
                         type: '',
-                        price: null,
-                        manufacturer: null,
+                        price: '',
+                        manufacturer: 0,
                     })
                     alert('Tuote lisätty')
                 }, (error) => {
@@ -62,11 +68,11 @@ export default function ProductForm() {
             <h1>Lisää vaate</h1>
             <form>
                 <label htmlFor="name">Anna Vaatteen nimi</label>
-                <input type="text" id="name" name="name" onChange={(e) => handleChange(e)} /><br />
+                <input type="text" id="name" name="name" value={productData.name} onChange={(e) => handleChange(e)} /><br />
                 <label htmlFor="type">Anna Vaatteen tyyppi</label>
-                <input type="text" id="type" name="type" onChange={(e) => handleChange(e)} /><br />
+                <input type="text" id="type" name="type" value={productData.type} onChange={(e) => handleChange(e)} /><br />
                 <label htmlFor="price">Anna Vaatteen hinta</label>
-                <input type="number" id="price" name="price" onChange={(e) => handleChange(e)} /><br />
+                <input type="number" id="price" name="price" value={productData.price} onChange={(e) => handleChange(e)} /><br />
                 <label htmlFor="manufacturer">Valitse valmistaja</label>
                 <select id="manufacturer" name="manufacturer" onChange={(e) => handleChange(e)} >
                     {manufacturers.map((item) => (
@@ -75,7 +81,7 @@ export default function ProductForm() {
                 </select>
             </form>
             <button type="submit" onClick={handleSubmit}>Lisää tuote</button><span>&nbsp;</span>
-            <button type="submit">Peruuta</button>
+            <button type="submit" onClick={emptyForm}>Peruuta</button>
         </div>
     )
 }

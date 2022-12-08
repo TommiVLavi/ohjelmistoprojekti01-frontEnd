@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button } from 'react-bootstrap-buttons';
 
-export default function ProductList() {
+export default function ProductList({hasRole}) {
     const [productData, setProductData] = useState([]);
     const [message, setMessage] = useState('Ladataan tietoja...');
 
@@ -21,24 +20,32 @@ export default function ProductList() {
         getProductData();
     }, []);
 
-    // return table when data is loaded and there are no errors
-    if (message.length > 0) return <p>{message}</p>
-
+    
     // delete selected product
     const deleteProduct = async (id) => {
         console.log("Clicked delete item: " + id);
         try{
-            const response = await axios.delete('https://spring.omppujarane.store/api/products' + id);
+            const response = await axios.delete('https://spring.omppujarane.store/api/products/' + id);
             console.log('Tuote poistettu');
             setMessage('');
         }
         catch (error) {
-            setMessage('Tuotteen poistaminen ei onnistunut');
+            if (error.response.status === 403) {
+                alert('Ei oikeuksia tuotteen poistamiseen');
+            } else {
+                setMessage('Tuotteen poistaminen ei onnistunut');
+            }
         }
 
         getProductData();
     }
+    
+    // return table when data is loaded and there are no errors
+    if (message.length > 0) return <p>{message}</p>
 
+    /*
+    Reset some product data in testing purposes
+    
     const resetProductData = async () => {
         const prod1 = {
             "name": "Pipo2",
@@ -67,21 +74,21 @@ export default function ProductList() {
         
         console.log("lisää tuotteita");
         const response = await axios
-        .post('https://spring.omppujarane.store/api/products', prod1)
+        .post('https://spring.omppujarane.store/api/products/', prod1)
         .catch((error) => console.log('Error: ', error));
         if(response && response.data){
             console.log(response);
             console.log(response.data);
         }
         const response2 = await axios
-        .post('https://spring.omppujarane.store/api/products', prod2)
+        .post('https://spring.omppujarane.store/api/products/', prod2)
         .catch((error) => console.log('Error: ', error));
         if(response2 && response2.data){
             console.log(response2);
             console.log(response2.data);
         }
         const response3 = await axios
-        .post('https://spring.omppujarane.store/api/products', prod3)
+        .post('https://spring.omppujarane.store/api/products/', prod3)
         .catch((error) => console.log('Error: ', error));
         if(response3 && response3.data){
             console.log(response3);
@@ -89,9 +96,10 @@ export default function ProductList() {
         }
         getProductData();
     }
-
-    return (
-        <div className='table-container'>
+    */
+   
+   return (
+       <div className='table-container'>
             <table className="table table-bordered table-striped table-hover">
                 <thead className="thead thead-dark">
                     <tr>
@@ -99,7 +107,7 @@ export default function ProductList() {
                         <th>Nimi</th>
                         <th>Hinta</th>
                         <th>Valmistaja</th>
-                        <th>Poista tuote</th>
+                       {hasRole === "ADMIN" ? <th>Poista tuote</th> : null}
                     </tr>
                 </thead>
                 <tbody>
@@ -109,12 +117,13 @@ export default function ProductList() {
                             <td>{item.name}</td>
                             <td>{item.price}</td>
                             <td>{item.manufacturer.name}</td>
-                            <td><Button onClick={() => deleteProduct(item.id)}>X</Button></td>
+                            {hasRole === "ADMIN" ? <td><button onClick={() => deleteProduct(item.id)}>X</button></td> : null}
                         </tr>
                     ))}
                 </tbody>
-            </table>
-            <Button onClick={() => resetProductData()}>Reset</Button>
+           </table>
+           <h1>{message}</h1>
+            {/* <Button onClick={() => resetProductData()}>Reset</Button> */}
         </div>
     );
 }

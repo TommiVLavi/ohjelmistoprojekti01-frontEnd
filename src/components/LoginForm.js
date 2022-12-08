@@ -1,13 +1,13 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { SERVER_URL_h2, SERVER_URL_mariadb } from "../constants";
+import jwt_decode from "jwt-decode";
 
-function LoginForm(){
+function LoginForm({ hasRole, setHasRole }){
     const [user, setUser] = useState({
         username: '',
         password: ''
     });
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    
+
     const handleChange = (event) => {
         setUser({
             ...user,
@@ -15,34 +15,51 @@ function LoginForm(){
         );
     }
 
-    const login = () => {
-        fetch(SERVER_URL_h2 + 'login', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'}, 
-            body: JSON.stringify(user)
-        })
-        .then(response => {
-            const jwToken = response.headers.get('Authorization');
-            if(jwToken !== null){
-                sessionStorage.setItem("jwt", jwToken);
-                setIsAuthenticated(true);
-            }
-        })
-        .catch(error => console.error(error))
+    const setAuthToken = (token) => {
+        if (token) {
+            axios.defaults.headers.common["Authorization"] = token;
+        } else {
+            delete axios.defaults.headers.common["Authorization"];
+        }
     }
 
-    const loginTest = () => {
-        setIsAuthenticated(true);
-        console.log("Logged in as " + user.username);
+    const login = async () => {
+        const formData = {
+            "username": user.username,
+            "password": user.password
+        }
+        try {
+            await axios.post('https://spring.omppujarane.store/auth/login', formData)
+            .then(response => {
+                const jwToken = response.headers.get('Authorization');
+                if(jwToken !== null){
+                    sessionStorage.setItem("jwt", jwToken);
+                    setAuthToken(jwToken);
+                    setHasRole(jwt_decode(jwToken).role);
+                }
+            })
+                .catch(error => console.error(error))
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    const logout = () => {
-        setIsAuthenticated(false);
+    const logout = async () => {
+        try {
+            await axios.post('https://spring.omppujarane.store/logout')
+                .then(response => {
+                    sessionStorage.removeItem("jwt");
+                    setAuthToken(null);
+                    setHasRole('')
+                })
+                .catch(error => console.error(error))
+        } catch (error) {
+            console.log(error)
+        }
         console.log("logged out");
     }
 
-
-    if (isAuthenticated){
+    if (hasRole){
         return(
             <div><button type="submit" onClick={logout}>Log out</button></div>
         );
@@ -50,9 +67,9 @@ function LoginForm(){
     else{
         return(
             <div>
-                Login: <input type="text" id="username" name="username" placeholder={'Username'} onChange={handleChange} />
-                <input type="password" id="password" name="password" placeholder={'Password'} onChange={handleChange} />
-                <button type="submit" onClick={loginTest} >Log In</button>
+                <input type="text" id="username" name="username" placeholder={'Käyttätunnus'} onChange={handleChange} />
+                <input type="password" id="password" name="password" placeholder={'Salasana'} onChange={handleChange} />
+                <button type="submit" onClick={login} >Kirjaudu</button>
             </div>
         );
     }

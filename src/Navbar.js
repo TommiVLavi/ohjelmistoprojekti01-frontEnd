@@ -1,18 +1,15 @@
-import { Children } from "react"
 import { Link, useMatch, useResolvedPath } from "react-router-dom"
-import LoginForm from './components/LoginForm';
 
-export default function Navbar() {
-    
-    
+export default function Navbar({hasRole}) {
+
     return(
         <nav className="nav">
             <Link to="/" className="site-title">Etusivulle</Link>
             <ul>
-                <CustomLink to="/ProductForm">Lisää tuote</CustomLink>
+                {hasRole === "ADMIN" ? <CustomLink to="/ProductForm">Lisää tuote</CustomLink> : null}
                 <CustomLink to="/ProductList">Tuotelistaus</CustomLink>
                 <CustomLink to="/ManufacturerList">Valmistajalistaus</CustomLink>
-                <LoginForm />
+                <CustomLink to="/Login">Kirjaudu sisään</CustomLink>
             </ul>
         </nav>
     )    
