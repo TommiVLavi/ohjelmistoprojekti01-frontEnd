@@ -1,6 +1,14 @@
 import { Link, useMatch, useResolvedPath } from "react-router-dom"
+import axios from 'axios';
 
-export default function Navbar({hasRole}) {
+export default function Navbar({hasRole, setHasRole}) {
+
+    function logOut() {
+        setHasRole('');
+        sessionStorage.removeItem("jwt");
+        delete axios.defaults.headers.common["Authorization"];
+        window.location.reload();
+    }
 
     return(
         <nav className="nav">
@@ -9,10 +17,10 @@ export default function Navbar({hasRole}) {
                 {hasRole === "ADMIN" ? <CustomLink to="/ProductForm">Lisää tuote</CustomLink> : null}
                 <CustomLink to="/ProductList">Tuotelistaus</CustomLink>
                 <CustomLink to="/ManufacturerList">Valmistajalistaus</CustomLink>
-                <CustomLink to="/Login">Kirjaudu sisään</CustomLink>
+                <CustomLink to="/logout" onClick={logOut}>Kirjaudu ulos</CustomLink>
             </ul>
         </nav>
-    )    
+    )
 }
 //funktio tarkistaa millä sivulla ollaan ja korostaa sen navipalkissa
 //lisätty myös toiminnallisuutta, ettei sivua ladata aina uudestaan, ainoastaan se osa mikä muuttuu ladataan.
@@ -24,5 +32,4 @@ function CustomLink({ to, children, ...props }) {
             <Link to={to} {...props}>{children}</Link>
         </li>
     )
-     
 }

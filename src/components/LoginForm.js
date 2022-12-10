@@ -2,11 +2,12 @@ import axios from "axios";
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 
-function LoginForm({ hasRole, setHasRole }){
+export default function LoginForm({ setHasRole }){
     const [user, setUser] = useState({
         username: '',
         password: ''
     });
+    const [message, setMessage] = useState('');
 
     const handleChange = (event) => {
         setUser({
@@ -15,7 +16,10 @@ function LoginForm({ hasRole, setHasRole }){
         );
     }
 
+    // Set token to Authorization header for every axios request
     const setAuthToken = (token) => {
+        delete axios.defaults.headers.common["Authorization"];
+
         if (token) {
             axios.defaults.headers.common["Authorization"] = token;
         } else {
@@ -28,6 +32,7 @@ function LoginForm({ hasRole, setHasRole }){
             "username": user.username,
             "password": user.password
         }
+        setMessage('')
         try {
             await axios.post('https://spring.omppujarane.store/auth/login', formData)
             .then(response => {
@@ -38,45 +43,23 @@ function LoginForm({ hasRole, setHasRole }){
                     setHasRole(jwt_decode(jwToken).role);
                 }
             })
-                .catch(error => console.error(error))
         } catch (error) {
-            console.log(error)
+            if (error.response.status === 403) {
+                setMessage('Käyttäjätunnus tai salasana on väärä')
+            } else {
+                console.log(error)
+            }
         }
     }
 
-    const logout = async () => {
-        try {
-            await axios.post('https://spring.omppujarane.store/logout')
-                .then(response => {
-                    sessionStorage.removeItem("jwt");
-                    setAuthToken(null);
-                    setHasRole('')
-                })
-                .catch(error => console.error(error))
-        } catch (error) {
-            console.log(error)
-        }
-        console.log("logged out");
-    }
-
-    if (hasRole){
-        return(
-            <div><button type="submit" onClick={logout}>Log out</button></div>
-        );
-    }
-    else{
-        return(
-            <div>
-                <input type="text" id="username" name="username" placeholder={'Käyttätunnus'} onChange={handleChange} />
-                <input type="password" id="password" name="password" placeholder={'Salasana'} onChange={handleChange} />
-                <button type="submit" onClick={login} >Kirjaudu</button>
-            </div>
-        );
-    }
+    return(
+        <div style={{ textAlign:'center', paddingTop:'30px'}}>
+            <input type="text" id="username" name="username" style={{marginBottom:'10px'}}
+                placeholder={'Käyttätunnus'} onChange={handleChange} /><br />
+            <input type="password" id="password" name="password" style={{marginBottom:'10px'}}
+                placeholder={'Salasana'} onChange={handleChange} /><br />
+            <p style={{color:'red'}}>{message}</p>
+            <button className="btn btn-secondary" type="submit" onClick={login}>Kirjaudu</button>
+        </div>
+    );
 }
-
-export default LoginForm;
-
-
-
-

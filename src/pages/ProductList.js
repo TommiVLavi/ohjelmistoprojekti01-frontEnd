@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function ProductList({hasRole}) {
+export default function ProductList({ hasRole }) {
     const [productData, setProductData] = useState([]);
     const [message, setMessage] = useState('Ladataan tietoja...');
 
@@ -25,7 +25,7 @@ export default function ProductList({hasRole}) {
     const deleteProduct = async (id) => {
         console.log("Clicked delete item: " + id);
         try{
-            const response = await axios.delete('https://spring.omppujarane.store/api/products/' + id);
+            await axios.delete('https://spring.omppujarane.store/api/products/' + id);
             console.log('Tuote poistettu');
             setMessage('');
         }

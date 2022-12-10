@@ -16,24 +16,20 @@ function App() {
       <LoginForm hasRole={hasRole} setHasRole={setHasRole} />
     )
   }
-  return <>
+  return (<>
     <BrowserRouter>
-      <Navbar hasRole={hasRole} />
+      <Navbar hasRole={hasRole} setHasRole={setHasRole} />
       <div className="app-container">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/ProductForm" element={<ProductForm />} />
-          <Route path="/ProductList" element={<ProductList hasRole={hasRole}/>} />
+          <Route path="/ProductList" element={<ProductList hasRole={hasRole} />} />
           <Route path="/ManufacturerList" element={<ManufacturerList />} />
-          <Route path="/Login" element={
-            <LoginForm hasRole={hasRole} setHasRole={setHasRole} />}
-          />
+          <Route path="/Login" element={<LoginForm hasRole={hasRole} setHasRole={setHasRole} />} />
         </Routes>
-        
       </div>
     </BrowserRouter>
-
-  </>
+  </>);
 }
 
 export default App;
