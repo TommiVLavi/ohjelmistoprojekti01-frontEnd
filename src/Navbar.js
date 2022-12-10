@@ -7,7 +7,7 @@ export default function Navbar({hasRole, setHasRole}) {
         setHasRole('');
         sessionStorage.removeItem("jwt");
         delete axios.defaults.headers.common["Authorization"];
-        window.location.reload();
+        window.location.replace('/');
     }
 
     return(
