@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from "react-router-dom"
+import { Button } from 'react-bootstrap-buttons';
 
 export default function ProductList({ hasRole }) {
     const [productData, setProductData] = useState([]);
@@ -107,7 +109,8 @@ export default function ProductList({ hasRole }) {
                         <th>Nimi</th>
                         <th>Hinta</th>
                         <th>Valmistaja</th>
-                       {hasRole === "ADMIN" ? <th>Poista tuote</th> : null}
+                        {hasRole === "ADMIN" ? <th>Muokkaa tuote</th> : null}
+                        {hasRole === "ADMIN" ? <th>Poista tuote</th> : null}
                     </tr>
                 </thead>
                 <tbody>
@@ -117,6 +120,9 @@ export default function ProductList({ hasRole }) {
                             <td>{item.name}</td>
                             <td>{item.price}</td>
                             <td>{item.manufacturer.name}</td>
+                            {hasRole === "ADMIN" ? <th><Link to = "/ProductForm">
+                                    <Button outline btnStyle="dark"> M </Button>
+                                </Link></th> : null}
                             {hasRole === "ADMIN" ? <td><button onClick={() => deleteProduct(item.id)}>X</button></td> : null}
                         </tr>
                     ))}
